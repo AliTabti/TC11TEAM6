@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String , Enum , Date ,Time
+from sqlalchemy import Column, Integer, String , Enum , Date ,Time , ForeignKey
 from database import Base
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import relationship, validates
 import enum
 
 class EtatTache(enum.Enum):
@@ -33,6 +33,8 @@ class User(Base):
     nb_absence = Column(Integer, default=0)
     nb_retard = Column(Integer, default=0)
 
+    absences = relationship("Absence", back_populates="user", cascade="all, delete-orphan")
+
     
     @validates('phone')
     def validate_phone(self, key, value):
@@ -58,6 +60,9 @@ class Congé(Base):
     etat = Column(Enum(EtatConge), nullable=False)
     date_demande = Column(Date, nullable=False)
     date_fin = Column(Date, nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)  # Clé étrangère pour la relation
+     
+    user = relationship("User", back_populates="conge")
     
 class Retard(Base):
      __tablename__ = "retard"
@@ -65,11 +70,18 @@ class Retard(Base):
      id = Column(Integer, primary_key=True, autoincrement=True)
      date_retard = Column(Date, nullable=False)
      heure_retard = Column(Time , nullable= False)
+     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)  # Clé étrangère pour la relation
+     
+     user = relationship("User", back_populates="retard")
 
 class Absence   (Base):
      __tablename__ = "absence"
      id = Column(Integer, primary_key=True, autoincrement=True)
      date_absence = Column(Date, nullable=False)
+     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)  # Clé étrangère pour la relation
+     
+     user = relationship("User", back_populates="absence")
+
     
 class EmploiDuTemps(Base):
     __tablename__ = "edt"
@@ -78,16 +90,31 @@ class EmploiDuTemps(Base):
     date_travail = Column(Date, nullable=False)
     heure_debut = Column(Time , nullable= False)
     heure_fin = Column(Time , nullable= False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)  # Clé étrangère pour la relation
+     
+    user = relationship("User", back_populates="edt")
     
-    
-class Taches(Base):    
-    __tablename__ = "taches"
-    
+class user_tache(Base):
+    __tablename__ = ("user-taches")
     id = Column(Integer, primary_key=True, autoincrement=True)
-    date_aff = Column(Date, nullable=False) 
-    heure_aff = Column(Time , nullable= False)
-    etat_tache = Column(Enum(EtatConge), nullable=False)
-    
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)  # Clé étrangère pour la relation
+    tache_id = Column(Integer, ForeignKey('taches.id'), nullable=False)  # 
+        
+class Taches(Base):
+    __tablename__ = "taches"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    date_aff = Column(Date, nullable=False)
+    heure_aff = Column(Time, nullable=False)
+    etat_tache = Column(Enum(EtatTache), nullable=False)
+    rh_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+
+    # Relations
+    responsable_rh = relationship("User", foreign_keys=[rh_id])
+    users = relationship("User", secondary=user_tache, back_populates="taches")  # Clé étrangère pour la relation
+
+        
+        
 class Check(Base):
         
     __tablename__ = "check"
@@ -96,8 +123,12 @@ class Check(Base):
     date_checkin = Column(Date, nullable=False) 
     heure_checkin = Column(Time , nullable= False)
     heure_checkout = Column(Time , nullable= False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)  # Clé étrangère pour la relation
+     
+    user = relationship("User", back_populates="check")
 
      
-    
+
+        
     
     

@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine, Base
-from models import test
 
 # Créer toutes les tables au démarrage
 
@@ -17,14 +16,8 @@ def get_db():
 
 # Endpoint pour créer un utilisateur
 @app.post("/users/")
-def create_user(name: str, email: str, db: Session = Depends(get_db)):
-    user = test(name=name, email=email)
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user
+def create_user():
+    return "cA VA "
 
 # Endpoint pour obtenir tous les utilisateurs
-@app.get("/users/")
-def read_users(db: Session = Depends(get_db)):
-    return db.query(test).all()
+
