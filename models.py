@@ -37,10 +37,10 @@ class UserCreate(BaseModel):
     nb_retard: int
 
 
-class UserTache(Base):  # Corrected class name to follow camel case convention
+class UserTache(Base):
     __tablename__ = "user_tache"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)  # Foreign key for the relationship
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     tache_id = Column(Integer, ForeignKey('taches.id'), nullable=False)
 
 

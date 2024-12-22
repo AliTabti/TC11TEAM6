@@ -40,3 +40,17 @@ def update_task_status(task_id: int, status: EtatTache, db: Session = Depends(ge
     task.etat_tache = status
     db.commit()
     return {"message": "Task status updated successfully"}
+
+#Récupérer toutes les tâches
+@router.get("/")
+def get_all_tasks(db: Session = Depends(get_db)):
+    tasks = db.query(Taches).all()
+    return tasks
+
+#Récupérer une tâche par ID
+@router.get("/{task_id}")
+def get_task_by_id(task_id: int, db: Session = Depends(get_db)):
+    task = db.query(Taches).filter(Taches.id == task_id).first()
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task

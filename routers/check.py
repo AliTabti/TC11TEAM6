@@ -31,3 +31,17 @@ def check_out(check_id: int, checkout_time: str, db: Session = Depends(get_db)):
     check.heure_checkout = checkout_time
     db.commit()
     return {"message": "Check-out successful"}
+
+#Récupérer tous les Check-ins
+@router.get("/checkins")
+def get_all_checkins(db: Session = Depends(get_db)):
+    checkins = db.query(Check).all()
+    return checkins
+
+#Récupérer un Check-in par ID
+@router.get("/checkin/{check_id}")
+def get_checkin_by_id(check_id: int, db: Session = Depends(get_db)):
+    check = db.query(Check).filter(Check.id == check_id).first()
+    if not check:
+        raise HTTPException(status_code=404, detail="Check-in record not found")
+    return check
