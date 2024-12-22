@@ -1,12 +1,17 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException, Request, Response
+from typing import Annotated
 from sqlalchemy.orm import Session
+import database as database
 from database import SessionLocal, engine, Base
 
-# Créer toutes les tables au démarrage
+from models import User, UserCreate, Check, CheckCreate, TaskCreate, Taches, EtatTache
+from sqlalchemy.orm import relationship
+from routers import auth, check, tasks, leaves, dashboard, absences, retards
+
 
 app = FastAPI()
 
-# Fonction de dépendance pour obtenir une session de base de données
+
 def get_db():
     db = SessionLocal()
     try:
@@ -14,10 +19,11 @@ def get_db():
     finally:
         db.close()
 
-# Endpoint pour créer un utilisateur
-@app.post("/users/")
-def create_user():
-    return "cA VA "
 
-# Endpoint pour obtenir tous les utilisateurs
-
+app.include_router(auth.router, prefix="/auth", tags=["Authentification"])
+app.include_router(check.router, prefix="/check", tags=["Check-in/Check-out"])
+app.include_router(tasks.router, prefix="/tasks", tags=["Gestion des Tâches"])
+app.include_router(leaves.router, prefix="/leaves", tags=["Gestion des Congés"])
+app.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
+app.include_router(absences.router, prefix="/absences", tags=["Gestion des Absences"])
+app.include_router(retards.router, prefix="/retards", tags=["Gestion des Retards"])
