@@ -1,0 +1,74 @@
+# 🐍 Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*~ 
+*.log
+*.sqlite3
+
+# 📦 Virtual Environments
+venv/
+env/
+.venv/
+.env/
+
+# 📚 Jupyter Notebooks
+.ipynb_checkpoints
+
+# 🛠️ IDEs & Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 📊 Database files
+*.db
+*.sqlite
+
+# 🔑 Environment Variables
+.env
+.env.*
+secrets.json
+
+# 📦 Dependency directories
+dist/
+build/
+.eggs/
+*.egg-info/
+
+# 🔄 Caches
+pip-log.txt
+pip-delete-this-directory.txt
+
+# 🔑 Security
+__pypackages__/
+poetry.lock
+
+# 📝 Pytest / Coverage
+.coverage
+*.cover
+.hypothesis/
+.tox/
+.nox/
+
+# 🧠 MyPy
+.mypy_cache/
+
+# 🌐 Static & Media files
+static/
+media/
+
+# 📑 Documentation
+docs/_build/
+
+# 🔄 Docker
+docker-compose.override.yml
+
+# 🛠️ PyCharm Specific
+*.iml
+.idea/
+
+# 🚀 FastAPI Specific
+*.db
+*.sqlite3
